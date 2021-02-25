@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE generatorConfiguration
+        PUBLIC "-//mybatis.org//DTD MyBatis Generator Configuration 1.0//EN"
+        "http://mybatis.org/dtd/mybatis-generator-config_1_0.dtd">
+<generatorConfiguration>
+    <!--classPathEntry:数据库的JDBC驱动,换成你自己的驱动位置 -->
+    <classPathEntry location="E:\repository\com\dameng\DmJdbcDriver\8.0\DmJdbcDriver-8.0.jar" />
+    <!-- 一个数据库一个context -->
+    <!--defaultModelType="flat" 大数据字段，不分表 -->
+    <context id="MysqlTables" targetRuntime="MyBatis3" defaultModelType="flat">
+        <property name="autoDelimitKeywords" value="true"/>
+        <property name="beginningDelimiter" value=""/>
+        <property name="endingDelimiter" value=""/>
+        <property name="javaFileEncoding" value="utf-8"/>
+        <plugin type="org.mybatis.generator.plugins.SerializablePlugin"/>
+        <plugin type="org.mybatis.generator.plugins.ToStringPlugin"/>
+        <!-- 注释 -->
+        <commentGenerator>
+            <property name="suppressAllComments" value="true"/><!-- 是否取消注释 -->
+            <property name="suppressDate" value="true"/> <!-- 是否生成注释代时间戳-->
+        </commentGenerator>
+        <!-- jdbc连接 -->
+        <jdbcConnection driverClass="dm.jdbc.driver.DmDriver"
+                        connectionURL="jdbc:dm://127.0.0.1:5236"
+                        userId="GUITAR"
+                        password="888888888"/>
+        <!-- 类型转换 -->
+        <javaTypeResolver>
+            <!-- 是否使用bigDecimal， false可自动转化以下类型（Long, Integer, Short, etc.） -->
+            <property name="forceBigDecimals" value="false"/>
+        </javaTypeResolver>
+        <!-- 生成实体类地址H:\Business\Spring Boot\code\springboot4\mybatis-demo\yingxuedao\src\main\java (要改成你自己实际的目录) -->
+        <javaModelGenerator targetPackage="com.heb.guitar.entity"
+                            targetProject="src\main\java">
+            <property name="enableSubPackages" value="false"/>
+            <property name="trimStrings" value="true"/>
+        </javaModelGenerator>
+        <!-- 生成mapxml文件 H:\Business\Spring Boot\code\springboot4\mybatis-demo\yingxuedao\src\main\resources (要改成你自己实际的目录) -->
+        <sqlMapGenerator targetPackage="mapper" targetProject="src\main\resources">
+            <property name="enableSubPackages" value="false"/>
+        </sqlMapGenerator>
+        <!-- 生成mapxml对应client，也就是接口dao -->
+        <javaClientGenerator targetPackage="com.heb.guitar.mapper"
+                             targetProject="src\main\java"
+                             type="MAPPER">
+            <property name="enableSubPackages" value="false"/>
+        </javaClientGenerator>
+        <table tableName="SYS_LOG" domainObjectName="SysLog"
+               enableCountByExample="false"
+               enableUpdateByExample="false"
+               enableDeleteByExample="false"
+               enableSelectByExample="false"
+               selectByExampleQueryId="true">
+            <columnOverride column="time" javaType="java.lang.Integer"/>
+        </table>
+        <!--<table tableName="SYS_USER" domainObjectName="SysUser"
+               enableCountByExample="false"
+               enableUpdateByExample="false"
+               enableDeleteByExample="false"
+               enableSelectByExample="false"
+               selectByExampleQueryId="true">
+            <columnOverride column="sex" javaType="java.lang.Integer"/>
+            <columnOverride column="status" javaType="java.lang.Integer"/>
+            <columnOverride column="create_where" javaType="java.lang.Integer"/>
+            <columnOverride column="deleted" javaType="java.lang.Integer"/>
+        </table>-->
+        <!--<table tableName="SYS_PERMISSION" domainObjectName="SysPermission"
+                enableCountByExample="false"
+                enableUpdateByExample="false"
+                enableSelectByExample="false"
+                enableDeleteByExample="false"
+                selectByExampleQueryId="true">
+             <columnOverride column="type" javaType="java.lang.Integer"/>
+             <columnOverride column="status" javaType="java.lang.Integer"/>
+             <columnOverride column="deleted" javaType="java.lang.Integer"/>
+        </table>-->
+    </context>
+</generatorConfiguration>

@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+<html lang="en" xml:th="http://www.thymeleaf.org" xmlns:shiro="http://www.pollix.at/thymeleaf/shiro">
+<head>
+    <meta charset="UTF-8">
+    <title>dept</title>
+    <link rel="stylesheet" href="/lib/layui/css/layui.css" media="all">
+    <link rel="stylesheet" href="/css/public.css" media="all">
+    <link rel="stylesheet" href="/lib/font-awesome-4.7.0/css/font-awesome.min.css" media="all">
+    <script src="/lib/layui/layui.js" charset="utf-8"></script>
+    <script src="/js/lay-config.js?v=1.0.4" charset="utf-8"></script>
+    <script src="/js/core-util.js" charset="utf-8"></script>
+    <style>
+        .layui-btn:not(.layui-btn-lg ):not(.layui-btn-sm):not(.layui-btn-xs) {
+            height: 34px;
+            line-height: 34px;
+            padding: 0 8px;
+        }
+        .layui-tree-set-active > .layui-tree-entry .layui-tree-main {
+            background: #CFE9FC;
+        }
+    </style>
+</head>
+<body>
+<!---================新增/编辑 表单开始======================-->
+<script type="text/html" id="addWin">
+    <div class="panel panel-default operation_dept">
+        <div class="layui-form layuimini-form" style="margin: 30px">
+            <input type="text" name="id" hidden>
+            <input type="text" name="pid" hidden>
+            <div class="layui-form-item">
+                <label class="layui-form-label required">部门名称</label>
+                <div class="layui-input-block">
+                    <input type="text" id="name" name="name" lay-verify="required" lay-reqtext="组织机构名称不能为空" placeholder="请输入组织机构名称" autocomplete="off" class="layui-input">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <div class="layui-form-label required">所属部门</div>
+                <div class="layui-input-block">
+                    <input type="pidName" name="pidName" id="pidName" placeholder="请选择所属部门" autocomplete="off" lay-verify="required"
+                           class="layui-input" readonly="readonly" style="background:#eeeeee!important">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">部门经理名称</label>
+                <div class="layui-input-block">
+                    <input type="text" name="managerName"  placeholder="请输入部门经理名称" autocomplete="off" class="layui-input">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">部门经理手机号</label>
+                <div class="layui-input-block">
+                    <input type="phone" name="phone" placeholder="请输入部门经理手机号" autocomplete="off" class="layui-input">
+                </div>
+            </div>
+            <div class="layui-form-item layui-form-text">
+                <label class="layui-form-label">状态</label>
+                <div class="layui-input-block">
+                    <input type="checkbox" name="status" lay-skin="switch" lay-filter="switch" lay-text="启用|禁用" checked>
+                </div>
+            </div>
+            <fieldset class="layui-elem-field layui-field-title" style="margin-top: 30px;"></fieldset>
+            <div class="layui-form-item">
+                <div class="layui-input-block">
+                    <button class="layui-btn layui-btn-sm layui-btn-normal" lay-submit lay-filter="submit" type="submit">
+                        <i class="fa fa-floppy-o" aria-hidden="true"></i>&nbsp;&nbsp;保存</button>
+                    <button class="layui-btn layui-btn-sm layui-btn-primary" id="btn_cancel">
+                        <i class="fa fa-undo" aria-hidden="true"></i>&nbsp;&nbsp;返回</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</script>
+<!---================表单结束======================-->
+
+<!-- 主表格 -->
+<div class="layuimini-container">
+    <div class="layuimini-main">
+        <div>
+            <table id="dept-table" class="layui-table" lay-filter="dept-table"></table>
+        </div>
+    </div>
+</div>
+
+<script type="text/html" id="tool">
+    <button class="layui-btn layui-btn-primary layui-btn-xs data-add-btn" lay-event="edit" shiro:hasPermission="sys:dept:update"> 编辑 </button>
+    <button class="layui-btn layui-btn-xs layui-btn-danger data-delete-btn" lay-event="del" shiro:hasPermission="sys:dept:delete"> 删除 </button>
+</script>
+
+<!-- 工具条 -->
+<script type="text/html" id="toolbar">
+    <div class="layui-btn-container">
+        <button class="layui-btn layui-btn-normal layui-btn-sm data-add-btn" lay-event="addMenu" shiro:hasPermission="sys:dept:add">
+            <i class="layui-icon">&#xe654;</i> 添加 </button>
+        <button class="layui-btn layui-btn-primary layui-btn-sm" id="btn-expand" lay-event="expand">全部展开</button>
+        <button class="layui-btn layui-btn-primary layui-btn-sm" id="btn-fold" lay-event="fold">全部折叠</button>
+    </div>
+</script>
+
+</body>
+<script>
+    layui.use(['tree', 'table', 'treetable', 'jquery', 'form'], function () {
+        var form = layui.form,
+            $ = layui.jquery,
+            table = layui.table,
+            treetable = layui.treetable,
+            layer = layui.layer,
+            tree = layui.tree;
+        /*用来记录部门权限树选中*/
+            var selectNode=null;
+
+        /*获取所有的部门数据*/
+        var reloadTreeTable=function(){
+            CoreUtil.sendAjax("/api/depts",null,function (res) {
+                renderTable(res.data);
+            },"GET",false,function (res) {
+                //无权限访问部门限列表提示
+                layer.msg("抱歉！您暂无获取部门列表的权限");
+                var noAuthorityData=[];
+                renderTable(noAuthorityData);
+            });
+        }
+        reloadTreeTable();
+
+        /*初始化部门列表数据*/
+        var renderTable = function (data) {
+            treetable.render({
+                data:data,
+                treeColIndex: 1, // 树形图标显示在第几列
+                treeSpid: 0, // 最上级的父级id
+                treeIdName: 'id',
+                treePidName: 'pid',
+                elem: '#dept-table',
+                toolbar:'#toolbar',
+                //url: '../api/menus.json',
+                treeDefaultClose: true, // 是否默认折叠
+                treeLinkage: false, // 父级展开时是否自动展开所有子级
+                page: false, // 树形表格一般是没有分页的
+                cols: [
+                    [
+                        {type: 'numbers'},
+                        {field: 'deptNo', minWidth: 200, title: '部门编码'},
+                        {field: 'name', title: '部门名称'},
+                        {
+                            field: 'pidName', title: '上级部门名称',templet: function (item) {
+                                if(item.pidName === null||item.pidName===undefined){
+                                    return "最顶级部门";
+                                }else {
+                                    return item.pidName;
+                                }
+                            }
+                        },
+                        {field: 'relationCode', title: '层级关系编码'},
+                        {field: 'managerName', title: '部门经理'},
+                        {field: 'phone', title: '部门经理联系电话'},
+                        {field: 'status', title: '状态',width: 70,  templet: function (item) {
+                                if(item.status === 1){
+                                    return '<span class="layui-badge layui-bg-green">启用</span>';
+                                }else{
+                                    return '<span class="layui-badge layui-bg-gray">禁用</span>';
+                                }
+                            }
+                        },
+                        {
+                            field: 'createTime', title: '创建时间', minWidth: 120, templet: function (item) {
+                                return CoreUtil.formattime(item.createTime);
+                            }
+                        },
+                        {toolbar:'#tool', width: 180, align: 'center', title: '操作'}
+                    ]
+                ],
+                done: function () {
+                    layer.closeAll('loading');
+                }
+            });
+
+        }
+
+        //新增菜单权限事件
+        table.on('toolbar(dept-table)',function (obj) {
+            if(obj.event === 'expand'){
+                treetable.expandAll('#dept-table');
+            }
+            if(obj.event === 'fold'){
+                treetable.foldAll('#dept-table');
+            }
+            if(obj.event === 'addMenu'){
+                addOrEditWin('','add');
+            }
+        });
+
+        var addOrEditWin = function (data,type){
+            var title = type === 'add' ? '新增部门' : '编辑部门';
+            var index = layer.open({
+                title: title,
+                type: 1,
+                shade: 0.2,
+                maxmin:false,
+                shadeClose: true,
+                area: ['100%', '100%'],
+                content: $("#addWin").html(),
+                success: function () {
+                    if(type === 'edit'){
+                        $(".operation_dept input[name=id]").val(data.id);
+                        $(".operation_dept input[name=pid]").val(data.pid);
+                        $(".operation_dept input[name=name]").val(data.name);
+                        $(".operation_dept input[name=pidName]").val(data.pid === '0' ? '默认顶级部门' : data.pidName);
+                        $(".operation_dept input[name=managerName]").val(data.managerName);
+                        $(".operation_dept input[name=phone]").val(data.phone);
+                        if(data.status == 1){
+                            $(".operation_dept input[name=status]").attr('checked','checked');
+                        }else{
+                            $(".operation_dept input[name=status]").removeAttr('checked');
+                        }
+                    }else {
+                        $(".operation_dept input[name=id]").val('');
+                        $(".operation_dept input[name=pid]").val('');
+                    }
+                    form.render();
+                }
+            });
+            $(window).on("resize", function () {
+                layer.full(index);
+            });
+            return false;
+        }
+
+        $(document).on('click',"#btn_cancel",function () {
+            layer.closeAll();
+        });
+
+        //打开部门树对话框
+        $(document).on('click',"#pidName",function () {
+            layer.open({
+                type: 1,
+                title: "选择所属部门",
+                area: ['300px', '500px'],
+                shade: 0.2,
+                shadeClose: false,
+                content: "<ul id='deptTree'></ul>",
+                btn: ['确定', '取消'],
+                yes: function (index) {
+                    if(selectNode.data!=null){
+                        //选中回显
+                        $(".operation_dept input[name=pid]").val(selectNode.data.id);
+                        $(".operation_dept input[name=pidName]").val(selectNode.data.title);
+                    }
+                    layer.close(index);
+                },
+                zIndex: layer.zIndex, //重点1
+                success: function(){
+                    treeInWin();
+                },
+            });
+        });
+
+        var treeInWin = function () {
+            /*初始化部门树*/
+            var initTree = function (id) {
+                var param={deptId:id}
+                CoreUtil.sendAjax("/api/dept/tree", param, function (res) {
+                    loadDeptTree(res.data);
+                }, "GET", false, function (res) {
+                    //无权限获取部门树提示
+                    layer.msg("抱歉！您暂无获取部门树的权限");
+                    var noAuthorityData=[];
+                    loadDeptTree(noAuthorityData);
+                });
+            };
+            initTree();
+            //加载部门树数据
+            var loadDeptTree = function (data) {
+                //仅节点左侧图标控制收缩
+                tree.render({
+                    elem: '#deptTree'
+                    , data: data
+                    , onlyIconControl: true //是否仅允许节点左侧图标控制展开收缩
+                    , click: function (obj) {
+                        // 点击高亮
+                        $(".layui-tree-set").removeClass('layui-tree-set-active');
+                        obj.elem.addClass('layui-tree-set-active');
+                        selectNode = obj;
+                    }
+                });
+            };
+        }
+
+
+        //监听提交
+        form.on('submit(submit)', function(data){
+            data.field.status = data.field.status === "on" ? 1 : 0;
+            //新增
+            if(data.field.id===undefined || data.field.id===null || data.field.id===""){
+                CoreUtil.sendAjax("/api/dept",JSON.stringify(data.field),function (res) {
+                    reloadTreeTable();
+                    layer.closeAll();
+                    layer.msg(res.msg);
+                },"POST",false, function (res) {
+                    //无权限新增部门提示
+                    layer.msg("抱歉！您暂无新增部门的权限");
+                });
+            }else {
+                CoreUtil.sendAjax("/api/dept",JSON.stringify(data.field),function (res) {
+                    reloadTreeTable();
+                    layer.closeAll();
+                    layer.msg(res.msg);
+                },"PUT",false, function (res) {
+                    //无条件更新部门提示
+                    layer.msg("抱歉！您暂无编辑部门的权限");
+                });
+            }
+            return false;
+        });
+
+
+        //监听工具条
+        table.on('tool(dept-table)', function (obj) {
+            var data = obj.data;
+            var layEvent = obj.event;
+            if (layEvent === 'del') {
+                //询问框
+                layer.confirm('确认删除【'+data.name+'】吗？', {
+                    btn: ['确定','取消'], //按钮
+                    title: '提示'
+                }, function(){
+                    CoreUtil.sendAjax("/api/dept/"+obj.data.id, null,function (res) {
+                        layer.msg(res.msg);
+                        reloadTreeTable();
+                    },"DELETE",false, function (res) {
+                        //无权限删除部门提示
+                        layer.msg("抱歉！您暂无删除部门数据的权限");
+                    });
+                });
+            }
+            if (layEvent === 'edit') {
+                addOrEditWin(data,"edit");
+                //layer.msg('修改' + data.id);
+            }
+        });
+
+    });
+</script>
+</html>

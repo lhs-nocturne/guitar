@@ -1,0 +1,160 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.heb.guitar.mapper.SysRoleMapper">
+  <resultMap id="BaseResultMap" type="com.heb.guitar.entity.SysRole">
+    <id column="ID" jdbcType="VARCHAR" property="id" />
+    <result column="NAME" jdbcType="VARCHAR" property="name" />
+    <result column="DESCRIPTION" jdbcType="VARCHAR" property="description" />
+    <result column="STATUS" jdbcType="TINYINT" property="status" />
+    <result column="CREATE_TIME" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="UPDATE_TIME" jdbcType="TIMESTAMP" property="updateTime" />
+    <result column="DELETED" jdbcType="TINYINT" property="deleted" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    ID, NAME, DESCRIPTION, STATUS, CREATE_TIME, UPDATE_TIME, DELETED
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from SYS_ROLE
+    where ID = #{id,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+    delete from SYS_ROLE
+    where ID = #{id,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.heb.guitar.entity.SysRole">
+    insert into SYS_ROLE (ID, NAME, DESCRIPTION, 
+      STATUS, CREATE_TIME, UPDATE_TIME, 
+      DELETED)
+    values (#{id,jdbcType=VARCHAR}, #{name,jdbcType=VARCHAR}, #{description,jdbcType=VARCHAR}, 
+      #{status,jdbcType=TINYINT}, #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP}, 
+      #{deleted,jdbcType=TINYINT})
+  </insert>
+  <insert id="insertSelective" parameterType="com.heb.guitar.entity.SysRole">
+    insert into SYS_ROLE
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        ID,
+      </if>
+      <if test="name != null">
+        NAME,
+      </if>
+      <if test="description != null">
+        DESCRIPTION,
+      </if>
+      <if test="status != null">
+        STATUS,
+      </if>
+      <if test="createTime != null">
+        CREATE_TIME,
+      </if>
+      <if test="updateTime != null">
+        UPDATE_TIME,
+      </if>
+      <if test="deleted != null">
+        DELETED,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=VARCHAR},
+      </if>
+      <if test="name != null">
+        #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="description != null">
+        #{description,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null">
+        #{status,jdbcType=TINYINT},
+      </if>
+      <if test="createTime != null">
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null">
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="deleted != null">
+        #{deleted,jdbcType=TINYINT},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.heb.guitar.entity.SysRole">
+    update SYS_ROLE
+    <set>
+      <if test="name != null">
+        NAME = #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="description != null">
+        DESCRIPTION = #{description,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null">
+        STATUS = #{status,jdbcType=TINYINT},
+      </if>
+      <if test="createTime != null">
+        CREATE_TIME = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null">
+        UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="deleted != null">
+        DELETED = #{deleted,jdbcType=TINYINT},
+      </if>
+    </set>
+    where ID = #{id,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.heb.guitar.entity.SysRole">
+    update SYS_ROLE
+    set NAME = #{name,jdbcType=VARCHAR},
+      DESCRIPTION = #{description,jdbcType=VARCHAR},
+      STATUS = #{status,jdbcType=TINYINT},
+      CREATE_TIME = #{createTime,jdbcType=TIMESTAMP},
+      UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+      DELETED = #{deleted,jdbcType=TINYINT}
+    where ID = #{id,jdbcType=VARCHAR}
+  </update>
+
+  <!-- @Description: 获取所有的角色-->
+  <select id="selectAll" resultMap="BaseResultMap"
+          parameterType="com.heb.guitar.vo.req.RolePageReqVO">
+    select <include refid="Base_Column_List"></include>
+    from SYS_ROLE
+    <where>
+      DELETED=1
+      <if test="roleName!=null and roleName!=''">
+        AND NAME LIKE concat('%',#{roleName},'%')
+      </if>
+      <if test="status!=null and status!='' or status==0 ">
+        AND STATUS = #{status}
+      </if>
+    </where>
+    limit ((${pageNum}-1)*${pageSize}),${pageSize}
+  </select>
+
+  <!-- @Description: 获取所有的角色总数-->
+  <select id="roleCount" resultType="long" parameterType="com.heb.guitar.vo.req.RolePageReqVO">
+    select count(*) as num
+    from SYS_ROLE
+    <where>
+      DELETED=1
+      <if test="roleName!=null and roleName!=''">
+        AND NAME LIKE concat('%',#{roleName},'%')
+      </if>
+      <if test="status!=null and status!='' or status==0 ">
+        AND STATUS = #{status}
+      </if>
+    </where>
+  </select>
+
+  <!-- @Description: 根绝角色id查询信息集合-->
+  <select id="getRoleInfoByIds" resultMap="BaseResultMap">
+    SELECT <include refid="Base_Column_List"></include>
+    FROM SYS_ROLE
+    WHERE ID IN
+    <foreach item="item" collection="list" open="(" separator="," close=")">
+      #{item}
+    </foreach>
+    AND DELETED=1
+  </select>
+</mapper>

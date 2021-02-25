@@ -1,0 +1,239 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.heb.guitar.mapper.SysPermissionMapper">
+  <resultMap id="BaseResultMap" type="com.heb.guitar.entity.SysPermission">
+    <id column="ID" jdbcType="VARCHAR" property="id" />
+    <result column="CODE" jdbcType="VARCHAR" property="code" />
+    <result column="NAME" jdbcType="VARCHAR" property="name" />
+    <result column="PERMS" jdbcType="VARCHAR" property="perms" />
+    <result column="URL" jdbcType="VARCHAR" property="url" />
+    <result column="METHOD" jdbcType="VARCHAR" property="method" />
+    <result column="PID" jdbcType="VARCHAR" property="pid" />
+    <result column="ORDER_NUM" jdbcType="INTEGER" property="orderNum" />
+    <result column="TYPE" jdbcType="TINYINT" property="type" />
+    <result column="STATUS" jdbcType="TINYINT" property="status" />
+    <result column="CREATE_TIME" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="UPDATE_TIME" jdbcType="TIMESTAMP" property="updateTime" />
+    <result column="DELETED" jdbcType="TINYINT" property="deleted" />
+    <result column="ICON" jdbcType="VARCHAR" property="icon" />
+    <result column="TARGET" jdbcType="VARCHAR" property="target" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    ID, CODE, NAME, PERMS, URL, METHOD, PID, ORDER_NUM, TYPE, STATUS, CREATE_TIME, ICON, TARGET,
+    UPDATE_TIME, DELETED
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from SYS_PERMISSION
+    where ID = #{id,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+    delete from SYS_PERMISSION
+    where ID = #{id,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.heb.guitar.entity.SysPermission">
+    insert into SYS_PERMISSION (ID, CODE, NAME,
+      PERMS, URL, METHOD,
+      PID, ORDER_NUM, TYPE, TARGET, ICON,
+      STATUS, CREATE_TIME, UPDATE_TIME,
+      DELETED)
+    values (#{id,jdbcType=VARCHAR}, #{code,jdbcType=VARCHAR}, #{name,jdbcType=VARCHAR}, 
+      #{perms,jdbcType=VARCHAR}, #{url,jdbcType=VARCHAR}, #{method,jdbcType=VARCHAR}, 
+      #{pid,jdbcType=VARCHAR}, #{orderNum,jdbcType=INTEGER}, #{type,jdbcType=TINYINT},
+      #{target,jdbcType=VARCHAR}, #{icon,jdbcType=VARCHAR}
+      #{status,jdbcType=TINYINT}, #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP}, 
+      #{deleted,jdbcType=TINYINT})
+  </insert>
+  <insert id="insertSelective" parameterType="com.heb.guitar.entity.SysPermission">
+    insert into SYS_PERMISSION
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        ID,
+      </if>
+      <if test="code != null">
+        CODE,
+      </if>
+      <if test="name != null">
+        NAME,
+      </if>
+      <if test="perms != null">
+        PERMS,
+      </if>
+      <if test="url != null">
+        URL,
+      </if>
+      <if test="method != null">
+        METHOD,
+      </if>
+      <if test="pid != null">
+        PID,
+      </if>
+      <if test="orderNum != null">
+        ORDER_NUM,
+      </if>
+      <if test="type != null">
+        TYPE,
+      </if>
+      <if test="status != null">
+        STATUS,
+      </if>
+      <if test="createTime != null">
+        CREATE_TIME,
+      </if>
+      <if test="target != null">
+        TARGET,
+      </if>
+      <if test="icon != null">
+        ICON,
+      </if>
+      <if test="updateTime != null">
+        UPDATE_TIME,
+      </if>
+      <if test="deleted != null">
+        DELETED,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=VARCHAR},
+      </if>
+      <if test="code != null">
+        #{code,jdbcType=VARCHAR},
+      </if>
+      <if test="name != null">
+        #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="perms != null">
+        #{perms,jdbcType=VARCHAR},
+      </if>
+      <if test="url != null">
+        #{url,jdbcType=VARCHAR},
+      </if>
+      <if test="method != null">
+        #{method,jdbcType=VARCHAR},
+      </if>
+      <if test="pid != null">
+        #{pid,jdbcType=VARCHAR},
+      </if>
+      <if test="orderNum != null">
+        #{orderNum,jdbcType=INTEGER},
+      </if>
+      <if test="type != null">
+        #{type,jdbcType=TINYINT},
+      </if>
+      <if test="status != null">
+        #{status,jdbcType=TINYINT},
+      </if>
+      <if test="createTime != null">
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="target != null">
+        #{target,jdbcType=VARCHAR},
+      </if>
+      <if test="icon != null">
+        #{icon,jdbcType=VARCHAR},
+      </if>
+      <if test="updateTime != null">
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="deleted != null">
+        #{deleted,jdbcType=TINYINT},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.heb.guitar.entity.SysPermission">
+    update SYS_PERMISSION
+    <set>
+      <if test="code != null">
+        CODE = #{code,jdbcType=VARCHAR},
+      </if>
+      <if test="name != null">
+        NAME = #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="perms != null">
+        PERMS = #{perms,jdbcType=VARCHAR},
+      </if>
+      <if test="url != null">
+        URL = #{url,jdbcType=VARCHAR},
+      </if>
+      <if test="method != null">
+        METHOD = #{method,jdbcType=VARCHAR},
+      </if>
+      <if test="pid != null">
+        PID = #{pid,jdbcType=VARCHAR},
+      </if>
+      <if test="orderNum != null">
+        ORDER_NUM = #{orderNum,jdbcType=INTEGER},
+      </if>
+      <if test="type != null">
+        TYPE = #{type,jdbcType=TINYINT},
+      </if>
+      <if test="status != null">
+        STATUS = #{status,jdbcType=TINYINT},
+      </if>
+      <if test="createTime != null">
+        CREATE_TIME = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="target != null">
+        TARGET = #{target,jdbcType=VARCHAR},
+      </if>
+      <if test="icon != null">
+        ICON = #{icon,jdbcType=VARCHAR},
+      </if>
+      <if test="updateTime != null">
+        UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="deleted != null">
+        DELETED = #{deleted,jdbcType=TINYINT},
+      </if>
+    </set>
+    where ID = #{id,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.heb.guitar.entity.SysPermission">
+    update SYS_PERMISSION
+    set CODE = #{code,jdbcType=VARCHAR},
+      NAME = #{name,jdbcType=VARCHAR},
+      PERMS = #{perms,jdbcType=VARCHAR},
+      URL = #{url,jdbcType=VARCHAR},
+      METHOD = #{method,jdbcType=VARCHAR},
+      PID = #{pid,jdbcType=VARCHAR},
+      ORDER_NUM = #{orderNum,jdbcType=INTEGER},
+      TYPE = #{type,jdbcType=TINYINT},
+      STATUS = #{status,jdbcType=TINYINT},
+      CREATE_TIME = #{createTime,jdbcType=TIMESTAMP},
+      TARGET = #{target,jdbcType=VARCHAR},
+      ICON = #{icon,jdbcType=VARCHAR},
+      UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+      DELETED = #{deleted,jdbcType=TINYINT}
+    where ID = #{id,jdbcType=VARCHAR}
+  </update>
+
+  <!-- @Description: 获取所有权限-->
+  <select id="selectAll" resultMap="BaseResultMap">
+    select <include refid="Base_Column_List"></include>
+    from SYS_PERMISSION
+    where DELETED=1
+    ORDER BY ORDER_NUM
+  </select>
+
+  <!-- @Description: 获取该菜单权限所有子集-->
+  <select id="selectChild" resultMap="BaseResultMap">
+    SELECT <include refid="Base_Column_List"></include>
+    FROM SYS_PERMISSION
+    WHERE DELETED = 1 AND
+    PID = #{pid}
+  </select>
+
+  <!-- @Description: 获取菜单权限集合-->
+  <select id="selectInfoByIds" resultMap="BaseResultMap">
+    SELECT <include refid="Base_Column_List"></include>
+    FROM SYS_PERMISSION
+    WHERE ID IN
+    <foreach item="item" collection="list" open="(" separator="," close=")">
+      #{item}
+    </foreach>
+    AND DELETED=1
+    ORDER BY ORDER_NUM
+  </select>
+</mapper>

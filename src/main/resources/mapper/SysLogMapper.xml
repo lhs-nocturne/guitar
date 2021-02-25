@@ -1,0 +1,183 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.heb.guitar.mapper.SysLogMapper">
+  <resultMap id="BaseResultMap" type="com.heb.guitar.entity.SysLog">
+    <id column="ID" jdbcType="VARCHAR" property="id" />
+    <result column="USER_ID" jdbcType="VARCHAR" property="userId" />
+    <result column="USERNAME" jdbcType="VARCHAR" property="username" />
+    <result column="OPERATION" jdbcType="VARCHAR" property="operation" />
+    <result column="TIME" jdbcType="INTEGER" property="time" />
+    <result column="METHOD" jdbcType="VARCHAR" property="method" />
+    <result column="PARAMS" jdbcType="VARCHAR" property="params" />
+    <result column="IP" jdbcType="VARCHAR" property="ip" />
+    <result column="CREATE_TIME" jdbcType="TIMESTAMP" property="createTime" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    ID, USER_ID, USERNAME, OPERATION, TIME, METHOD, PARAMS, IP, CREATE_TIME
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from SYS_LOG
+    where ID = #{id,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+    delete from SYS_LOG
+    where ID = #{id,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.heb.guitar.entity.SysLog">
+    insert into SYS_LOG (ID, USER_ID, USERNAME, 
+      OPERATION, TIME, METHOD, 
+      PARAMS, IP, CREATE_TIME
+      )
+    values (#{id,jdbcType=VARCHAR}, #{userId,jdbcType=VARCHAR}, #{username,jdbcType=VARCHAR}, 
+      #{operation,jdbcType=VARCHAR}, #{time,jdbcType=INTEGER}, #{method,jdbcType=VARCHAR}, 
+      #{params,jdbcType=VARCHAR}, #{ip,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.heb.guitar.entity.SysLog">
+    insert into SYS_LOG
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        ID,
+      </if>
+      <if test="userId != null">
+        USER_ID,
+      </if>
+      <if test="username != null">
+        USERNAME,
+      </if>
+      <if test="operation != null">
+        OPERATION,
+      </if>
+      <if test="time != null">
+        TIME,
+      </if>
+      <if test="method != null">
+        METHOD,
+      </if>
+      <if test="params != null">
+        PARAMS,
+      </if>
+      <if test="ip != null">
+        IP,
+      </if>
+      <if test="createTime != null">
+        CREATE_TIME,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=VARCHAR},
+      </if>
+      <if test="userId != null">
+        #{userId,jdbcType=VARCHAR},
+      </if>
+      <if test="username != null">
+        #{username,jdbcType=VARCHAR},
+      </if>
+      <if test="operation != null">
+        #{operation,jdbcType=VARCHAR},
+      </if>
+      <if test="time != null">
+        #{time,jdbcType=INTEGER},
+      </if>
+      <if test="method != null">
+        #{method,jdbcType=VARCHAR},
+      </if>
+      <if test="params != null">
+        #{params,jdbcType=VARCHAR},
+      </if>
+      <if test="ip != null">
+        #{ip,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null">
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.heb.guitar.entity.SysLog">
+    update SYS_LOG
+    <set>
+      <if test="userId != null">
+        USER_ID = #{userId,jdbcType=VARCHAR},
+      </if>
+      <if test="username != null">
+        USERNAME = #{username,jdbcType=VARCHAR},
+      </if>
+      <if test="operation != null">
+        OPERATION = #{operation,jdbcType=VARCHAR},
+      </if>
+      <if test="time != null">
+        TIME = #{time,jdbcType=INTEGER},
+      </if>
+      <if test="method != null">
+        METHOD = #{method,jdbcType=VARCHAR},
+      </if>
+      <if test="params != null">
+        PARAMS = #{params,jdbcType=VARCHAR},
+      </if>
+      <if test="ip != null">
+        IP = #{ip,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null">
+        CREATE_TIME = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where ID = #{id,jdbcType=VARCHAR}
+  </update>
+
+  <update id="updateByPrimaryKey" parameterType="com.heb.guitar.entity.SysLog">
+    update SYS_LOG
+    set USER_ID = #{userId,jdbcType=VARCHAR},
+      USERNAME = #{username,jdbcType=VARCHAR},
+      OPERATION = #{operation,jdbcType=VARCHAR},
+      TIME = #{time,jdbcType=INTEGER},
+      METHOD = #{method,jdbcType=VARCHAR},
+      PARAMS = #{params,jdbcType=VARCHAR},
+      IP = #{ip,jdbcType=VARCHAR},
+      CREATE_TIME = #{createTime,jdbcType=TIMESTAMP}
+    where ID = #{id,jdbcType=VARCHAR}
+  </update>
+
+  <!-- @Description: 获取所有的操作日志-->
+  <select id="selectAll" resultMap="BaseResultMap" parameterType="com.heb.guitar.vo.req.SysLogPageReqVO">
+    SELECT <include refid="Base_Column_List"></include>
+    FROM SYS_LOG
+    <where>
+      1=1
+      <if test="username!=null and username!=''">
+        AND USERNAME LIKE concat('%',#{username},'%')
+      </if>
+      <if test="operation!=null and operation!=''">
+        AND OPERATION LIKE concat('%',#{operation},'%')
+      </if>
+    </where>
+    ORDER BY CREATE_TIME DESC
+    LIMIT ((${pageNum}-1)*${pageSize}),${pageSize}
+  </select>
+  <!-- @Description: 获取所有的操作日志总数量-->
+  <select id="logCount" resultType="long" parameterType="com.heb.guitar.vo.req.SysLogPageReqVO">
+    SELECT COUNT(*) AS num FROM SYS_LOG
+    <where>
+      1=1
+      <if test="username!=null and username!=''">
+        AND USERNAME LIKE concat('%',#{username},'%')
+      </if>
+      <if test="operation!=null and operation!=''">
+        AND OPERATION LIKE concat('%',#{operation},'%')
+      </if>
+    </where>
+  </select>
+
+  <!-- @Description: 批量删除系统操作日志-->
+  <delete id="batchDeletedLog">
+    DELETE
+    FROM SYS_LOG
+    WHERE ID IN
+    <foreach item="item" collection="list" open="(" separator="," close=")">
+      #{item}
+    </foreach>
+  </delete>
+
+</mapper>
