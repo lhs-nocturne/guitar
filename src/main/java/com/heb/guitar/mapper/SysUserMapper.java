@@ -17,6 +17,8 @@ public interface SysUserMapper {
 
     int updateByPrimaryKey(SysUser record);
 
+    int userExist(String username);
+
     SysUser getUserInfoByName(String username);
 
     List<SysUser> selectAll(UserReqVO vo);

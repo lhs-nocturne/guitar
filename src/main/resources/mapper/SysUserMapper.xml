@@ -232,6 +232,14 @@
     where ID = #{id,jdbcType=VARCHAR}
   </update>
 
+  <!-- @Description: 新增用户判断用户名是否重复-->
+  <select id="userExist" resultType="int">
+    SELECT count(*) as num
+    FROM SYS_USER
+    WHERE USERNAME = #{username}
+    AND DELETED=1
+  </select>
+
   <!-- @Description: 根据用户名获取用户信息-->
   <select id="getUserInfoByName" resultMap="BaseResultMap">
     SELECT <include refid="Base_Column_List"></include>

@@ -97,7 +97,7 @@
                         <div class="layui-form-label required">所属部门</div>
                         <div class="layui-input-block">
                             <input type="deptName" name="deptName" id="deptName" placeholder="请选择所属部门" autocomplete="off" lay-verify="required"
-                                   class="layui-input" readonly="readonly" style="background:#eeeeee!important">
+                                   class="layui-input" readonly="readonly" style="">
                         </div>
                     </div>
                     <div class="layui-form-item">
@@ -291,6 +291,8 @@
                         $(".operation_user input[name=deptId]").val(data.deptId);
                         $(".operation_user input[name=deptName]").val(data.deptName);
                         $(".operation_user input[name=username]").val(data.username);
+                        $(".operation_user input[name=username]").attr('readOnly',true);
+                        $(".operation_user input[name=username]").attr('style',"background:#eeeeee!important");
                         $(".operation_user input[name=phone]").val(data.phone);
                         $(".operation_user input[name=realName]").val(data.realName);
                         $(".operation_user input[name=email]").val(data.email);
@@ -303,6 +305,7 @@
                         }
                     }else{
                         $(".operation_user input[name=id]").val('');
+                        $(".operation_user input[name=username]").attr('readOnly',false);
                     }
                     form.render();
                 }
@@ -380,8 +383,10 @@
             //新增
             if(data.field.id===undefined || data.field.id===null || data.field.id===""){
                 CoreUtil.sendAjax("/api/user",JSON.stringify(data.field),function (res) {
-                    layer.closeAll();
-                    initTable();
+                    if(res.code === 0){
+                        layer.closeAll();
+                        initTable();
+                    }
                     layer.msg(res.msg);
                 },"POST",false, function (res) {
                     //新增用户无权限提示
@@ -389,8 +394,10 @@
                 });
             }else{
                 CoreUtil.sendAjax("/api/user",JSON.stringify(data.field),function (res) {
-                    layer.closeAll();
-                    initTable();
+                    if(res.code === 0){
+                        layer.closeAll();
+                        initTable();
+                    }
                     layer.msg(res.msg);
                 },"PUT",false, function (res) {
                     //更新用户无权限提示

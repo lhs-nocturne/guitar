@@ -117,6 +117,10 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void addUser(UserAddReqVO vo) {
+        if(userExist(vo.getUsername())){
+            log.error("用户名:{}已存在",vo.getUsername());
+            throw new BusinessException(BaseResponseCode.EXIST_ACCOUNT);
+        }
         SysUser sysUser=new SysUser();
         //BeanUtils.copyProperties(vo,sysUser);
         sysUser.setPhone(vo.getPhone());
@@ -283,6 +287,18 @@ public class UserServiceImpl implements UserService {
          * 清楚用户授权数据缓存
          */
         redisService.delete(Constant.IDENTIFY_CACHE_KEY+userId);
+    }
+
+    /**
+     * 检查用户是否已存在
+     * @param username
+     * @return
+     */
+    public boolean userExist(String username) {
+        if(sysUserMapper.userExist(username)>0){
+            return true;
+        }
+        return false;
     }
 
 

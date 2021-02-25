@@ -18,6 +18,7 @@ public enum BaseResponseCode implements ResponseCodeInterface{
     NOT_ACCOUNT(4000003,"账号不存在，请注册"),
     USER_LOCK(4000004,"该账号已被锁定，请联系系统管理员"),
     PASSWORD_ERROR(4000005,"密码错误"),
+    EXIST_ACCOUNT(4000006,"账号已存在"),
     TOKEN_ERROR(4010001,"用户未登录，请重新登录"),
     TOKEN_NOT_NULL(4010001,"认证凭证不能为空，请重新登录获取"),
     SHIRO_AUTHENTICATION_ERROR(4010001,"token认证失败，请重新登录获取最新token"),
