@@ -1,5 +1,6 @@
 package com.heb.guitar.service.impl;
 
+import com.alibaba.druid.util.StringUtils;
 import com.heb.guitar.constants.Constant;
 import com.heb.guitar.entity.SysDept;
 import com.heb.guitar.entity.SysUser;
@@ -48,6 +49,14 @@ public class DeptServiceImpl implements DeptService {
     @Override
     public List<DeptRespNodeVO> deptTreeList(String deptId) {
         List<SysDept> list=sysDeptMapper.selectAll();
+        if(!StringUtils.isEmpty(deptId)&&!list.isEmpty()){
+            for (SysDept s : list) {
+                if(s.getId().equals(deptId)){
+                    list.remove(s);
+                    break;
+                }
+            }
+        }
        //默认加一个顶级方便新增顶级部门
         DeptRespNodeVO respNodeVO=new DeptRespNodeVO();
         respNodeVO.setTitle("默认顶级部门");

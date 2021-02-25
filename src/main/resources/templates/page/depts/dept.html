@@ -255,8 +255,14 @@
 
         var treeInWin = function () {
             /*初始化部门树*/
-            var initTree = function (id) {
-                var param={deptId:id}
+            var initTree = function () {
+                var param;
+                var id = $(".operation_dept input[name=id]").val();
+                if(id===undefined || id===null || id===""){
+                    param={deptId:''};
+                }else {
+                    param={deptId:id};
+                }
                 CoreUtil.sendAjax("/api/dept/tree", param, function (res) {
                     loadDeptTree(res.data);
                 }, "GET", false, function (res) {
