@@ -26,4 +26,6 @@ public interface RoleService {
     List<String> getRoleNames(String userId);
 
     List<SysRole> getRoleInfoByUserId(String userId);
+
+    List<String> getRoleCodes(String userId);
 }

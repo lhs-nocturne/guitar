@@ -53,9 +53,9 @@ public class CustomRealm extends AuthorizingRealm {
          * 就说明这个token是在这个标记key之后生成的
          */
         if(redisService.hasKey(Constant.JWT_REFRESH_KEY+userId)&&redisService.getExpire(Constant.JWT_REFRESH_KEY+userId, TimeUnit.MILLISECONDS)>JwtTokenUtil.getRemainingTime(accessToken)){
-            List<String> roleNames = roleService.getRoleNames(userId);
-            if(roleNames!=null&&!roleNames.isEmpty()){
-                info.addRoles(roleNames);
+            List<String> roleCodes = roleService.getRoleCodes(userId);
+            if(roleCodes!=null&&!roleCodes.isEmpty()){
+                info.addRoles(roleCodes);
             }
             Set<String> permissions=permissionService.getPermissionsByUserId(userId);
             if(permissions!=null){

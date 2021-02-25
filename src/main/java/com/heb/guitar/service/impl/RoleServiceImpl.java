@@ -183,6 +183,19 @@ public class RoleServiceImpl implements RoleService {
         return sysRoleMapper.getRoleInfoByIds(roleIds);
     }
 
+    @Override
+    public List<String> getRoleCodes(String userId) {
+        List<SysRole> sysRoles=getRoleInfoByUserId(userId);
+        if (null==sysRoles||sysRoles.isEmpty()){
+            return null;
+        }
+        List<String> list=new ArrayList<>();
+        for (SysRole sysRole:sysRoles){
+            list.add(sysRole.getCode());
+        }
+        return list;
+    }
+
     private void setChecked(List<PermissionRespNodeVO> list, Set<String> checkList){
         for(PermissionRespNodeVO node:list){
             /**

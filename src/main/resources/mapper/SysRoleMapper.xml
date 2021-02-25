@@ -3,6 +3,7 @@
 <mapper namespace="com.heb.guitar.mapper.SysRoleMapper">
   <resultMap id="BaseResultMap" type="com.heb.guitar.entity.SysRole">
     <id column="ID" jdbcType="VARCHAR" property="id" />
+    <result column="CODE" jdbcType="VARCHAR" property="code" />
     <result column="NAME" jdbcType="VARCHAR" property="name" />
     <result column="DESCRIPTION" jdbcType="VARCHAR" property="description" />
     <result column="STATUS" jdbcType="TINYINT" property="status" />
@@ -11,7 +12,7 @@
     <result column="DELETED" jdbcType="TINYINT" property="deleted" />
   </resultMap>
   <sql id="Base_Column_List">
-    ID, NAME, DESCRIPTION, STATUS, CREATE_TIME, UPDATE_TIME, DELETED
+    ID, CODE, NAME, DESCRIPTION, STATUS, CREATE_TIME, UPDATE_TIME, DELETED
   </sql>
   <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
     select 
@@ -24,7 +25,7 @@
     where ID = #{id,jdbcType=VARCHAR}
   </delete>
   <insert id="insert" parameterType="com.heb.guitar.entity.SysRole">
-    insert into SYS_ROLE (ID, NAME, DESCRIPTION, 
+    insert into SYS_ROLE (ID, CODE, NAME, DESCRIPTION,
       STATUS, CREATE_TIME, UPDATE_TIME, 
       DELETED)
     values (#{id,jdbcType=VARCHAR}, #{name,jdbcType=VARCHAR}, #{description,jdbcType=VARCHAR}, 
@@ -36,6 +37,9 @@
     <trim prefix="(" suffix=")" suffixOverrides=",">
       <if test="id != null">
         ID,
+      </if>
+      <if test="code != null">
+        CODE,
       </if>
       <if test="name != null">
         NAME,
@@ -60,6 +64,9 @@
       <if test="id != null">
         #{id,jdbcType=VARCHAR},
       </if>
+      <if test="code != null">
+        #{code,jdbcType=VARCHAR},
+      </if>
       <if test="name != null">
         #{name,jdbcType=VARCHAR},
       </if>
@@ -83,6 +90,9 @@
   <update id="updateByPrimaryKeySelective" parameterType="com.heb.guitar.entity.SysRole">
     update SYS_ROLE
     <set>
+      <if test="code != null">
+        CODE = #{code,jdbcType=VARCHAR},
+      </if>
       <if test="name != null">
         NAME = #{name,jdbcType=VARCHAR},
       </if>
@@ -106,7 +116,8 @@
   </update>
   <update id="updateByPrimaryKey" parameterType="com.heb.guitar.entity.SysRole">
     update SYS_ROLE
-    set NAME = #{name,jdbcType=VARCHAR},
+    set CODE = #{code,jdbcType=VARCHAR},
+      NAME = #{name,jdbcType=VARCHAR},
       DESCRIPTION = #{description,jdbcType=VARCHAR},
       STATUS = #{status,jdbcType=TINYINT},
       CREATE_TIME = #{createTime,jdbcType=TIMESTAMP},

@@ -8,6 +8,9 @@ import java.util.List;
 @Data
 public class RoleAddReqVO {
 
+    @ApiModelProperty(value = "角色编码")
+    @NotBlank(message = "角色编码不能为空")
+    private String code;
     @ApiModelProperty(value = "角色名称")
     @NotBlank(message = "名称不能为空")
     private String name;

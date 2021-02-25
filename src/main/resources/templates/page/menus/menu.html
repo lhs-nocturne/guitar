@@ -49,7 +49,7 @@
                         <input type="radio" name="type" value="3" title="按钮" lay-filter="radio-type">
                     </div>
                 </div>
-                <div class="layui-form-item">
+                <div class="layui-form-item menu-icon">
                     <label class="layui-form-label">图标</label>
                     <div class="layui-input-block">
                         <input type="text" id="iconPicker" name="icon" lay-filter="iconPicker" value="fa fa-align-justify" class="hide">
@@ -328,18 +328,21 @@
                 $(".menu-method").hide();
                 $(".menu-btn").hide();
                 $(".menu-perms").hide();
+                $(".menu-icon").show();
             }
             if(data.value === '2'){
                 $(".menu-url").show();
                 $(".menu-method").show();
                 $(".menu-perms").hide();
                 $(".menu-btn").hide();
+                $(".menu-icon").show();
             }
             if(data.value === '3'){
                 $(".menu-url").show();
                 $(".menu-method").show();
                 $(".menu-perms").show();
                 $(".menu-btn").show();
+                $(".menu-icon").hide();
             }
         });
 
@@ -407,7 +410,7 @@
         //监听提交
         form.on('submit(submit)', function(data){
             data.field.status = data.field.status === "on" ? 1 : 0;
-            console.log(data.field)
+            data.field.icon = data.field.icon === 3 ? '' : data.field.icon;
             //新增
             if(data.field.id===undefined || data.field.id===null || data.field.id===""){
                 CoreUtil.sendAjax("/api/permission",JSON.stringify(data.field),function (res) {

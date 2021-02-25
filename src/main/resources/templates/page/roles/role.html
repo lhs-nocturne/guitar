@@ -70,6 +70,12 @@
                     <input type="text" name="id" hidden>
                     <input type="text" name="pid" hidden>
                     <div class="layui-form-item">
+                        <label class="layui-form-label required">角色编码</label>
+                        <div class="layui-input-block">
+                            <input type="text" id="code" name="code" lay-verify="required" lay-reqtext="角色编码不能为空" placeholder="请输入角色编码" autocomplete="off" class="layui-input">
+                        </div>
+                    </div>
+                    <div class="layui-form-item">
                         <label class="layui-form-label required">角色名称</label>
                         <div class="layui-input-block">
                             <input type="text" id="name" name="name" lay-verify="required" lay-reqtext="角色名称不能为空" placeholder="请输入角色名称" autocomplete="off" class="layui-input">
@@ -191,6 +197,7 @@
                         {type: 'checkbox', fixed: 'left'},
                         {type: 'numbers', title: '序号', width: 80},
                         {field: 'id', title: 'ID', width: 300, hide: true},
+                        {field: 'code', title: '角色编码', width: 200},
                         {field: 'name', title: '角色名称', width: 200},
                         {field: 'description', title: '描述', width: 300},
                         {field: 'status', title: '状态', width: 70,templet: function (item) {
@@ -242,6 +249,7 @@
                     if(type==='edit'){
                         $(".operation_role input[name=id]").val(data.id);
                         $(".operation_role input[name=pid]").val(data.pid);
+                        $(".operation_role input[name=code]").val(data.code);
                         $(".operation_role input[name=name]").val(data.name);
                         $(".operation_role input[name=description]").val(data.description);
                         if(data.status == 1){
@@ -300,6 +308,7 @@
             var brchArrays = tree.getChecked('permissionIds');
             var params={
                 id:data.field.id,
+                code:data.field.code,
                 name:data.field.name,
                 description:data.field.description,
                 status:data.field.status === 'on' ? '1' : '0',

@@ -9,6 +9,8 @@ import java.util.List;
 public class SysRole implements Serializable {
     private String id;
 
+    private String code;
+
     private String name;
 
     private String description;
@@ -31,6 +33,14 @@ public class SysRole implements Serializable {
 
     public void setId(String id) {
         this.id = id == null ? null : id.trim();
+    }
+
+    public String getCode() {
+        return code;
+    }
+
+    public void setCode(String code) {
+        this.code = code;
     }
 
     public String getName() {
@@ -93,6 +103,7 @@ public class SysRole implements Serializable {
     public String toString() {
         return "SysRole{" +
                 "id='" + id + '\'' +
+                ", code='" + code + '\'' +
                 ", name='" + name + '\'' +
                 ", description='" + description + '\'' +
                 ", status=" + status +

@@ -290,7 +290,7 @@ public class UserServiceImpl implements UserService {
      * 获取用户的角色
      */
     private List<String> getRolesByUserId(String userId){
-        return roleService.getRoleNames(userId);
+        return roleService.getRoleCodes(userId);
     }
 
     /**
