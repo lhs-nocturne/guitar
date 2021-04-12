@@ -7,6 +7,7 @@ import javax.validation.constraints.NotBlank;
 
 @Data
 public class DeptUpdateReqVO {
+
     @ApiModelProperty(value = "部门id")
     @NotBlank(message = "部门id不能为空")
     private String id;
@@ -20,4 +21,5 @@ public class DeptUpdateReqVO {
     private String managerName;
     @ApiModelProperty(value = "部门经理电话")
     private String phone;
+
 }
